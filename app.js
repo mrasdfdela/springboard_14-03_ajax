@@ -1,11 +1,15 @@
 // giphy API: https://developers.giphy.com/docs/api/endpoint#search
 
-searchBtn = document.querySelector('#search-btn')
-searchBtn.addEventListener('click', function(e){
+btnSearch = document.querySelector('#btn-search')
+btnSearch.addEventListener('click', async function(e){
   e.preventDefault();
-  let input = document.querySelector('input').value
-  searchGiphy(input)
-
+  const input = document.querySelector('input').value;
+  const res = await searchGiphy(input);
+  
+  let importedGifs = document.querySelector('#importedGifs');
+  let newGif = document.createElement('img');
+  newGif.setAttribute('src',res.data.data[0].images.original.url);
+  importedGifs.appendChild(newGif);
 });
 
 /* Request:
@@ -23,10 +27,17 @@ async function searchGiphy(string) {
       }
     };
     const res = await axios.get(`http://api.giphy.com/v1/gifs/search`, req);
-    console.log(res);
-    res;
+    return res;
   } catch(e) {
     console.log(`error =( ${e}`)
   }
 }
 
+btnRemove = document.querySelector('#btn-remove')
+btnRemove.addEventListener( "click", (e) => {
+  e.preventDefault();
+  const allGifs = document.querySelectorAll("#importedGifs img");
+  for (gif of allGifs) {
+    gif.remove();
+  }
+});
