@@ -14,14 +14,17 @@ Response:
 {"data":[],"pagination":{"total_count":0,"count":0,"offset":0},"meta":{"status":200,"msg":"OK","response_id":"0qz07vp05ltjb49suz4g1g2de8k4g7fmynhyeoh7"}}
 */
 async function searchGiphy(string) {
-  const key = "osGOINpiQCdsokKlTE6T99xS2ktOwnH3";
-  const req = {
-    api_key: key,
-    string: string,
-  };
-
-  const res = await axios.get("api.giphy.com/v1/gifs/search", req);
-  
-  console.log(res);
+  try {
+    const key = "osGOINpiQCdsokKlTE6T99xS2ktOwnH3";
+    const req = {
+      params: {
+        api_key: key,
+        string: string
+      }
+    };
+    const res = await axios.get(`http://api.giphy.com/v1/gifs/random`, req);
+  } catch(e) {
+    console.log('error =(')
+  }
 }
 
