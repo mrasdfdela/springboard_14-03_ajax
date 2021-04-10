@@ -19,12 +19,14 @@ async function searchGiphy(string) {
     const req = {
       params: {
         api_key: key,
-        string: string
+        q: string
       }
     };
-    const res = await axios.get(`http://api.giphy.com/v1/gifs/random`, req);
+    const res = await axios.get(`http://api.giphy.com/v1/gifs/search`, req);
+    console.log(res);
+    res;
   } catch(e) {
-    console.log('error =(')
+    console.log(`error =( ${e}`)
   }
 }
 
