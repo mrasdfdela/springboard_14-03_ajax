@@ -51,13 +51,14 @@ function populateShows(shows) {
   for (let show of shows) {
     let $item = $(
       `<div class="col-md-6 col-lg-3 Show" data-show-id="${show.id}">
-         <div class="card" data-show-id="${show.id}">
-            <img class="card-img-top" src="${show.image}" alt="https://tinyurl.com/tv-missing">
-            <div class="card-body">
-              <h5 class="card-title">${show.name}</h5>
-              <p class="card-text">${show.summary}</p>
-           </div>
-         </div>
+        <div class="card" data-show-id="${show.id}">
+          <img class="card-img-top" src="${show.image}" alt="https://tinyurl.com/tv-missing">
+          <div class="card-body">
+            <h5 class="card-title">${show.name}</h5>
+            <p class="card-text">${show.summary}</p>
+          </div>
+          <button>Episodes</button>
+        </div>
        </div>
       `
     );
@@ -83,6 +84,8 @@ $("#search-form").on("submit", async function handleSearch (evt) {
   let shows = await searchShows(query);
 
   populateShows(shows);
+
+
 });
 
 
@@ -95,8 +98,7 @@ async function getEpisodes(id) {
   //       you can get this by making GET request to
   //       http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
   let eps = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`);
-  
-  return eps.map( (ep) => {
+  return eps.data.map( (ep) => {
     return {
       id: ep.id,
       name: ep.name,
@@ -106,3 +108,20 @@ async function getEpisodes(id) {
   });
   // TODO: return array-of-episode-info, as described in docstring above
 }
+
+function populateEpisodes(episodes) {
+  let $episodesList = $('#episodes-list');
+
+  for (let ep of episodes) {
+    let $episodeLi = $('<li>')
+    $episodeLi.text(`${ep.name} (s${ep.season}, n${ep.number})`)
+    $episodesList.append($episodeLi)
+  }
+}
+
+$('#shows-list').on('click', 'button', async function(e) {
+  let show = $(this).parent();
+  let showEpisodes = await getEpisodes(show.attr("data-show-id"));
+  $('#episodes-area').css('display','');
+  populateEpisodes(showEpisodes);
+})
